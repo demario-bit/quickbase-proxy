@@ -1,12 +1,20 @@
 export default async function handler(req, res) {
+  console.log("QB_TOKEN from env:", process.env.QB_TOKEN ? "Loaded" : "MISSING");
+
   const { path, body } = req.body;
 
-  // Build headers
   const headers = {
     "Content-Type": "application/json",
     "Authorization": `QB-USER-TOKEN ${process.env.QB_TOKEN}`,
     "QB-Realm-Hostname": "kimberlywood.quickbase.com"
   };
+
+  console.log("=== Outgoing Headers ===", {
+    "Content-Type": headers["Content-Type"],
+    "Authorization": headers["Authorization"]?.substring(0, 20) + "...",
+    "QB-Realm-Hostname": headers["QB-Realm-Hostname"]
+  });
+
 
   // Debug: print headers (without leaking full token)
   console.log("=== Quickbase Request Headers ===");
@@ -35,3 +43,4 @@ export default async function handler(req, res) {
     res.status(500).json({ error: error.message });
   }
 }
+
