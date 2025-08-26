@@ -2,7 +2,12 @@ export default async function handler(req, res) {
   const { path, body } = req.body;
 
   // 🔎 Debug log - will show in Vercel Runtime Logs
-  console.log("QB_TOKEN (masked):", process.env.QB_TOKEN ? "Loaded ✅" : "Missing ❌");
+  if (process.env.QB_TOKEN) {
+    const masked = process.env.QB_TOKEN.substring(0, 6) + "...[hidden]";
+    console.log("QB_TOKEN loaded ✅:", masked);
+  } else {
+    console.log("QB_TOKEN missing ❌");
+  }
 
   try {
     const response = await fetch(`https://api.quickbase.com/v1/${path}`, {
